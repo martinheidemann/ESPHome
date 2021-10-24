@@ -1,0 +1,11 @@
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret esphome_encryption
+
+ota:
+
+web_server:

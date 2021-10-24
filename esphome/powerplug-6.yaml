@@ -1,0 +1,54 @@
+substitutions:
+  name: powerplug
+  id: "6"
+  comment: "HiHome Plug (wpp-16s) - Malthe computer"
+  
+  v1_in:  "0.0"
+  v2_in:  "645.0"
+  v3_in:  "658.0"
+  v4_in:  "666.7"
+  v5_in:  "673.0"
+  v6_in:  "673.7"
+  v1_out: "0.0"
+  v2_out: "212.5"
+  v3_out: "216.2"
+  v4_out: "219.1"
+  v5_out: "221.0" 
+  v6_out: "222.4"
+  
+  w1_in:  "0.0"
+  w2_in:  "4501.5"
+  w3_in:  "7656.3"
+  w4_in:  "11516.6"
+  w1_out: "0.85"
+  w2_out: "636.0"
+  w3_out: "1082.0"
+  w4_out: "1622.0"
+  
+  a1_in:  "0.0"
+  a2_in:  "3.656"
+  a3_in:  "6.302"
+  a4_in:  "9.662"
+  a1_out: "0.010"
+  a2_out: "2.8966"
+  a3_out: "4.9896"
+  a4_out: "7.6306"
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  powerplug: !include include/powerplug/powerplug.yaml
+  
+  #include led and relay outputs
+  output: !include include/powerplug/output.yaml
+
+  #enable to the button on the powerplug
+  #button: !include include/powerplug/button.yaml
+
+  #set relay on at boot
+  boot: !include include/powerplug/boot_relay_on.yaml
+
+  #set switch on at boot
+  #boot: !include include/powerplug/boot_switch_on.yaml
+  

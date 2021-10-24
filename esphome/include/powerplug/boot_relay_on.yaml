@@ -1,0 +1,4 @@
+esphome:
+  on_boot:
+    then:
+      - output.turn_on: relay

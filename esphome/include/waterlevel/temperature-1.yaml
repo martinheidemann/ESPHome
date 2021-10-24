@@ -1,0 +1,14 @@
+dallas:
+  - pin: $temperature_pin
+    update_interval: 20s
+
+sensor:
+  - platform: dallas
+    address: $temperature_addr_1
+    name: ${sensorname}_temperature_1
+
+    filters:
+      - sliding_window_moving_average:
+          window_size: 3
+          send_every: 3
+          send_first_at: 3

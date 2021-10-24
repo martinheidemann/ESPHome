@@ -1,0 +1,54 @@
+substitutions:
+  name: powerplug
+  id: "9"
+  comment: "HiHome Plug (wpp-16s) - Køleskab - må ikke slukkes"
+  
+  v1_in:  "0.0"
+  v2_in:  "630.2"
+  v3_in:  "643.1"
+  v4_in:  "651.7"
+  v5_in:  "658.4"
+  v6_in:  "670.7"
+  v1_out: "0.0"
+  v2_out: "212.5"
+  v3_out: "216.2"
+  v4_out: "219.1"
+  v5_out: "221.0" 
+  v6_out: "222.4"
+
+  w1_in:  "0.0"
+  w2_in:  "3845.8"
+  w3_in:  "6548.5"
+  w4_in:  "9831.6"
+  w1_out: "0.85"
+  w2_out: "633.6"
+  w3_out: "1079.6"
+  w4_out: "1619.6"
+
+  a1_in:  "0.0"
+  a2_in:  "3.172"
+  a3_in:  "5.472"
+  a4_in:  "8.381"
+  a1_out: "0.010"
+  a2_out: "2.8862"
+  a3_out: "4.9792"
+  a4_out: "7.6202"
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  powerplug: !include include/powerplug/powerplug.yaml
+  
+  #include led and relay outputs
+  output: !include include/powerplug/output.yaml
+
+  #enable to the button on the powerplug
+  #button: !include include/powerplug/button.yaml
+
+  #set relay on at boot
+  boot: !include include/powerplug/boot_relay_on.yaml
+
+  #set switch on at boot
+  #boot: !include include/powerplug/boot_switch_on.yaml
+  

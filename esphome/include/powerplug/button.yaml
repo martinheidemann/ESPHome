@@ -1,0 +1,21 @@
+binary_sensor:
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO00
+      inverted: True
+    internal: True
+    on_press:
+      - switch.toggle: fakebutton
+
+switch:
+  - platform: template
+    name: ${sensorname}_status
+    optimistic: true
+    id: fakebutton
+    turn_on_action:
+      - output.turn_on: relay
+      - output.turn_on: led
+    turn_off_action:
+      - output.turn_off: relay
+      - output.turn_off: led

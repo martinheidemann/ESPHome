@@ -1,0 +1,31 @@
+substitutions:
+  devicename: ${name}-${id}
+  sensorname: ${name}_${id}
+
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: nodemcuv2
+  comment: $comment
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: D5
+    echo_pin: D6
+    name: ${sensorname}
+    unit_of_measurement: "cm"
+    accuracy_decimals: 0
+    pulse_time: 20us
+    update_interval: 20s
+
+    filters:
+      - sliding_window_moving_average:
+          window_size: 3
+          send_every: 3
+          send_first_at: 3
+
+      #- filter_out: 0.25 #error reading 43 cm
+      #- filter_out: 0.26 #error reading 42 cm
+      #- filter_out: 0.27 #error reading 41 cm
+      #- filter_out: 0.28 #error reading 40 cm
+      - lambda: return (68-x*100);

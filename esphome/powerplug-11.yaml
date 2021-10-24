@@ -1,0 +1,54 @@
+substitutions:
+  name: powerplug
+  id: "11"
+  comment: "HiHome Plug (wpp-16s) - Printer"
+  
+  v1_in:  "0.0"
+  v2_in:  "657.4"
+  v3_in:  "670.8"
+  v4_in:  "678.4"
+  v5_in:  "684.2"
+  v6_in:  "686.5"
+  v1_out: "0.0"
+  v2_out: "212.5"
+  v3_out: "216.2"
+  v4_out: "219.1"
+  v5_out: "221.0" 
+  v6_out: "222.5"
+
+  w1_in:  "0.0"
+  w2_in:  "4210.9"
+  w3_in:  "7147.4"
+  w4_in:  "10719.1"
+  w1_out: "0.85"
+  w2_out: "640.0"
+  w3_out: "1086.0"
+  w4_out: "1626.0"
+
+  a1_in:  "0.0"
+  a2_in:  "3.362"
+  a3_in:  "5.775"
+  a4_in:  "8.836"
+  a1_out: "0.010"
+  a2_out: "2.914"
+  a3_out: "5.007"
+  a4_out: "7.648"
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  powerplug: !include include/powerplug/powerplug.yaml
+  
+  #include led and relay outputs
+  output: !include include/powerplug/output.yaml
+
+  #enable to the button on the powerplug
+  button: !include include/powerplug/button.yaml
+
+  #set relay on at boot
+  #boot: !include include/powerplug/boot_relay_on.yaml
+
+  #set switch on at boot
+  #boot: !include include/powerplug/boot_switch_on.yaml
+  

@@ -1,0 +1,10 @@
+substitutions:
+  name: heater
+  id: "1"
+  comment: "Seasons heat - Martin"
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  heater: !include include/heater/heater.yaml

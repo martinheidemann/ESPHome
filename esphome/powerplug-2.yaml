@@ -1,0 +1,59 @@
+substitutions:
+  name: powerplug
+  id: "2"
+  comment: "HiHome Plug (wpp-16s) - Segboard opladning"
+  
+  v1_in:  "0.0"
+  v2_in:  "657.4"
+  v3_in:  "668.5"
+  v4_in:  "676.8"
+  v5_in:  "682.8"
+  v6_in:  "0"
+  v1_out: "0.0"
+  v2_out: "212.5"
+  v3_out: "216.2"
+  v4_out: "219.1"
+  v5_out: "222.4" 
+  v6_out: "0"
+  
+  w1_in:  "0.0"
+  w2_in:  "4134.3"
+  w3_in:  "7015.0"
+  w4_in:  "10518.4"
+  w1_out: "0.85"
+  w2_out: "639.2"
+  w3_out: "1085.2"
+  w4_out: "1625.2"
+
+  a1_in:  "0.0"
+  a2_in:  "3.321"
+  a3_in:  "5.707"
+  a4_in:  "8.728"
+  a1_out: "0.010"
+  a2_out: "2.9105"
+  a3_out: "5.0035"
+  a4_out: "7.6445"
+
+  min_watt: "3"
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  powerplug: !include include/powerplug/powerplug.yaml
+  
+  #include led and relay outputs
+  output: !include include/powerplug/output.yaml
+
+  #enable to the button on the powerplug
+  button: !include include/powerplug/button.yaml
+
+  #set relay on at boot
+  #boot: !include include/powerplug/boot_relay_on.yaml
+
+  #set switch on at boot
+  boot: !include include/powerplug/boot_switch_on.yaml
+
+  #set poweroff on usage below "min_watt"
+  poweroff: !include include/powerplug/poweroff.yaml
+  

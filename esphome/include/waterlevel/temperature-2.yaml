@@ -1,0 +1,13 @@
+sensor:
+  - platform: dallas
+    address: $temperature_addr_2
+    name: ${sensorname}_temperature_2
+
+    filters:
+      - sliding_window_moving_average:
+          window_size: 3
+          send_every: 3
+          send_first_at: 3
+
+packages:
+  temperature1: !include temperature-1.yaml

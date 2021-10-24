@@ -1,0 +1,15 @@
+substitutions:
+  name: waterlevel
+  id: "1"
+  comment: "Vandstand og temperatur i dræn"
+
+  temperature_pin: D2
+  temperature_addr_1: "0x230416861C37FF28"
+  #temperature_addr_2: "0x230416861C37FF28"
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  waterlevel: !include include/waterlevel/waterlevel.yaml
+  temperature: !include include/waterlevel/temperature-1.yaml

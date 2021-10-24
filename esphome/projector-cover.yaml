@@ -1,0 +1,60 @@
+substitutions:
+  devicename: projector-cover
+  sensorname: projector_cover
+  comment: "SONOFF Dual R2 - Lærred"
+
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: esp01_1m
+  comment: $comment
+  #esp8266_restore_from_flash: true
+
+wifi:
+  use_address: 10.0.20.10
+  
+binary_sensor:
+- platform: gpio
+  pin:
+    number: GPIO10
+    #inverted: true
+  id: button
+  on_press:
+    then:
+      - switch.turn_on: open_cover
+  on_release:
+    then:
+      - switch.turn_off: open_cover
+      
+      #- cover.control:
+      #    id: my_cover
+      #    position: 100%
+      
+switch:
+- platform: gpio
+  pin: GPIO12
+  interlock: &interlock [open_cover, close_cover]
+  id: open_cover
+- platform: gpio
+  pin: GPIO5
+  interlock: *interlock
+  id: close_cover
+
+cover:
+- platform: time_based
+  name: ${sensorname}_cover
+  id: my_cover
+  open_action: #OP
+    - switch.turn_on: open_cover
+  open_duration: 42s
+  close_action: #NED
+    - switch.turn_on: close_cover
+  close_duration: 40s
+  stop_action:
+    - switch.turn_off: open_cover
+    - switch.turn_off: close_cover
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml

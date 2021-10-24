@@ -1,0 +1,22 @@
+wifi:
+  ssid: !secret esphome_ssid
+  password: !secret esphome_password
+
+  ap:
+    ssid: ${sensorname}_hotspot
+    password: !secret esphome_fallback_password
+
+captive_portal:
+
+sensor:
+  - platform: uptime
+    name: ${sensorname}_uptime
+
+  - platform: wifi_signal
+    name: ${sensorname}_wifi_signal
+    update_interval: 60s
+    force_update: True
+    filters:
+      - lambda: |-
+          if (x < -90.0 || x > -30.0) return {};
+          else return x;

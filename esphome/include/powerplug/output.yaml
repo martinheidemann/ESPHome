@@ -1,0 +1,10 @@
+output:
+  - platform: gpio
+    id: relay
+    pin: GPIO14
+
+  - platform: gpio
+    id: led
+    pin:
+      number: GPIO13
+      inverted: True

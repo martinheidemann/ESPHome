@@ -1,0 +1,15 @@
+sensor:
+  - platform: template
+    internal: true
+    name: "${sensorname}_poweroff"
+    #id: "${sensorname}_watt"
+    unit_of_measurement: W
+    accuracy_decimals: 0
+
+    lambda: |-
+      return (id(${sensorname}_watt).state);
+
+    on_value_range:
+      - below: ${min_watt}
+        then:
+          - switch.turn_off: fakebutton

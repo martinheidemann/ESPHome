@@ -1,0 +1,54 @@
+substitutions:
+  name: powerplug
+  id: "4"
+  comment: "HiHome Plug (wpp-16s) - Affugter"
+  
+  v1_in:  "0.0"
+  v2_in:  "657.8"
+  v3_in:  "671.4"
+  v4_in:  "679.8"
+  v5_in:  "686.2"
+  v6_in:  "0.0"
+  v1_out: "0.0"
+  v2_out: "212.5"
+  v3_out: "216.2"
+  v4_out: "219.1"
+  v5_out: "221.0" 
+  v6_out: "0.0"
+
+  w1_in:  "0.0"
+  w2_in:  "4222.3"
+  w3_in:  "7171.2"
+  w4_in:  "10753.2"
+  w1_out: "0.85"
+  w2_out: "637.6"
+  w3_out: "1083.6"
+  w4_out: "1623.6"
+
+  a1_in:  "0.0"
+  a2_in:  "3.388"
+  a3_in:  "5.831"
+  a4_in:  "8.928"
+  a1_out: "0.010"
+  a2_out: "2.9036"
+  a3_out: "4.9966"
+  a4_out: "7.6376"
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  powerplug: !include include/powerplug/powerplug.yaml
+  
+  #include led and relay outputs
+  output: !include include/powerplug/output.yaml
+
+  #enable to the button on the powerplug
+  button: !include include/powerplug/button.yaml
+
+  #set relay on at boot
+  #boot: !include include/powerplug/boot_relay_on.yaml
+
+  #set switch on at boot
+  boot: !include include/powerplug/boot_switch_on.yaml
+  

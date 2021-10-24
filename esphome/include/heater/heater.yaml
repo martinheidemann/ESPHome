@@ -1,0 +1,98 @@
+substitutions:
+  devicename: ${name}-${id}
+  sensorname: ${name}_${id}
+
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: esp01_1m
+  comment: $comment
+
+# Make sure logging is not using the serial port
+logger:
+  baud_rate: 0
+
+uart:
+  rx_pin: GPIO3
+  tx_pin: GPIO1
+  baud_rate: 9600
+
+# Register the Tuya MCU connection
+tuya:
+  time_id: homeassistant_time
+
+climate:
+  - platform: tuya
+    name: ${sensorname}
+    switch_datapoint: 1
+    target_temperature_datapoint: 2
+    target_temperature_multiplier: 0.1
+    current_temperature_datapoint: 3
+    current_temperature_multiplier: 0.1
+#Create a binary sensor
+#binary_sensor:
+#  - platform: "tuya"
+#    name: "sensor 101"
+#    sensor_datapoint: 101
+
+#  - platform: "tuya"
+#    name: "Windows mode"
+#    sensor_datapoint: 103
+
+#  - platform: "tuya"
+#    name: "sensor 104"
+#    sensor_datapoint: 104
+
+#switch:
+#  - platform: "tuya"
+#    name: "Vacation mode"
+#    switch_datapoint: 4
+
+#  - platform: "tuya"
+#    name: "Timer"
+#    switch_datapoint: 10
+
+#  - platform: "tuya"
+#    name: "sensor 101"
+#    switch_datapoint: 101
+
+#  - platform: "tuya"
+#    name: "Windows mode"
+#    switch_datapoint: 103
+
+#  - platform: "tuya"
+#    name: "sensor 104"
+#    switch_datapoint: 104
+
+#sensor:
+#  - platform: "tuya"
+#    name: "Remaining time"
+#    sensor_datapoint: 11
+
+#  - platform: "tuya"
+#    name: "sensor 101"
+#    sensor_datapoint: 101
+
+#  - platform: "tuya"
+#    name: "Windows mode"
+#    sensor_datapoint: 103
+
+#  - platform: "tuya"
+#    name: "sensor 104"
+#    sensor_datapoint: 104
+
+#  - platform: "tuya"
+#    name: "On time"
+#    sensor_datapoint: 105
+
+# Datapoint 1: switch (value: OFF)            Heat On/Off
+# Datapoint 2: int value (value: 180)         Target temp
+# Datapoint 3: int value (value: 130)         Current temp
+# Datapoint 4: enum (value: 0)                0 = Manual mode  1 = Vacation
+# Datapoint 10: enum (value: 0)               0 = Timer off  1 = Timer On
+# Datapoint 11: int value (value: 0)          Remaining time in min
+# Datapoint 101: int value (value: 0)
+# Datapoint 103: enum (value: 0)
+# Datapoint 104: enum (value: 0)
+# Datapoint 105: int value (value: 0)
+# Product: '4aVbNfxEYUbylvvW1.0.0'

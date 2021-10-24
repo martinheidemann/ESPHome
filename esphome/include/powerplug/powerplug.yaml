@@ -1,0 +1,124 @@
+substitutions:
+  devicename: ${name}-${id}
+  sensorname: ${name}_${id}
+
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: esp01_1m
+  comment: $comment
+
+sensor:
+  - platform: total_daily_energy
+    name: ${sensorname}_total_daily_energy
+    power_id: ${sensorname}_watt
+    accuracy_decimals: 3
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    filters:
+      - multiply: 0.001
+
+  - platform: hlw8012
+    sel_pin:
+      number: GPIO12
+      inverted: True
+    cf_pin: GPIO04
+    cf1_pin: GPIO05
+    initial_mode: VOLTAGE
+    #change_mode_every: 4294967295
+    update_interval: 10s
+    # sensor som bliver eksponeret  til ha
+
+    voltage:
+      name: "${sensorname}_volt_org"
+      id: "${sensorname}_volt_org"
+      unit_of_measurement: V
+      accuracy_decimals: 5
+      internal: true
+
+      on_value:
+        then:
+          - component.update: ${sensorname}_volt
+
+    power:
+      name: "${sensorname}_watt_org"
+      id: "${sensorname}_watt_org"
+      unit_of_measurement: W
+      accuracy_decimals: 5
+      internal: true
+
+      on_value:
+        then:
+          - component.update: ${sensorname}_watt
+
+    current:
+      name: "${sensorname}_amp_org"
+      id: "${sensorname}_amp_org"
+      unit_of_measurement: A
+      accuracy_decimals: 5
+      internal: true
+
+      on_value:
+        then:
+          - component.update: ${sensorname}_amp
+
+  - platform: template
+    name: "${sensorname}_volt"
+    id: "${sensorname}_volt"
+    unit_of_measurement: V
+    accuracy_decimals: 1
+
+    lambda: |-
+      return (id(${sensorname}_volt_org).state);
+    filters:
+      # Map from sensor -> measured value
+      - calibrate_linear:
+          - ${v1_in} -> ${v1_out}
+          - ${v2_in} -> ${v2_out}
+          - ${v3_in} -> ${v3_out}
+          - ${v4_in} -> ${v4_out}
+          - ${v5_in} -> ${v5_out}
+          - ${v6_in} -> ${v6_out}
+
+  - platform: template
+    name: "${sensorname}_watt"
+    id: "${sensorname}_watt"
+    unit_of_measurement: W
+    state_class: measurement
+    device_class: power
+    accuracy_decimals: 0
+
+    lambda: |-
+      return (id(${sensorname}_watt_org).state);
+    filters:
+      #Map from sensor -> measured value
+      - calibrate_linear:
+          - ${w1_in} -> ${w1_out}
+          - ${w2_in} -> ${w2_out}
+          - ${w3_in} -> ${w3_out}
+          - ${w4_in} -> ${w4_out}
+
+      # Make everything below 2W appear as just 0W.
+      # Furthermore it corrects 1.14W for the power usage of the plug.
+      - lambda: if (x < (2 + 0.85)) return 0; else return (x - 0.85);
+
+  - platform: template
+    name: "${sensorname}_amp"
+    id: "${sensorname}_amp"
+    unit_of_measurement: A
+    accuracy_decimals: 3
+
+    lambda: |-
+      return(id(${sensorname}_amp_org).state);
+    filters:
+      # Map from sensor -> measured value
+      - calibrate_linear:
+          - ${a1_in} -> ${a1_out}
+          - ${a2_in} -> ${a2_out}
+          - ${a3_in} -> ${a3_out}
+          - ${a4_in} -> ${a4_out}
+
+      # Make everything below 0.01A appear as just 0A.
+      # Furthermore it corrects 0.013A for the power usage of the plug.
+      - lambda: if (x < (0.01 - 0.010)) return 0; else return (x - 0.010);

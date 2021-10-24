@@ -1,0 +1,54 @@
+substitutions:
+  name: powerplug
+  id: "7"
+  comment: "HiHome Plug (wpp-16s) - Alfred computer"
+  
+  v1_in:  "0.0"
+  v2_in:  "638.4"
+  v3_in:  "651.4"
+  v4_in:  "659.5"
+  v5_in:  "666.4"
+  v6_in:  "0.0"
+  v1_out: "0.0"
+  v2_out: "212.5"
+  v3_out: "216.2"
+  v4_out: "219.1"
+  v5_out: "221.0" 
+  v6_out: "0.0"
+  
+  w1_in:  "0.0"
+  w2_in:  "4495.3"
+  w3_in:  "7668.8"
+  w4_in:  "11529.0"
+  w1_out: "0.85"
+  w2_out: "635.2"
+  w3_out: "1081.2"
+  w4_out: "1621.2"
+  
+  a1_in:  "0.0"
+  a2_in:  "3.685"
+  a3_in:  "6.359"
+  a4_in:  "9.745"
+  a1_out: "0.010"
+  a2_out: "2.8931"
+  a3_out: "4.9861"
+  a4_out: "7.6271"
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  powerplug: !include include/powerplug/powerplug.yaml
+  
+  #include led and relay outputs
+  output: !include include/powerplug/output.yaml
+
+  #enable to the button on the powerplug
+  #button: !include include/powerplug/button.yaml
+
+  #set relay on at boot
+  boot: !include include/powerplug/boot_relay_on.yaml
+
+  #set switch on at boot
+  #boot: !include include/powerplug/boot_switch_on.yaml
+  

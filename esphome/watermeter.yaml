@@ -1,0 +1,329 @@
+substitutions:
+  name: watermeter
+  comment: "Vandforbrug"  
+
+  devicename: ${name}
+  sensorname: ${name}
+
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: nodemcuv2
+  comment: $comment
+  on_boot:
+    priority: -10
+    then:
+      - script.execute: publish_states
+
+# Documentations:
+# https://github.com/esphome/issues/issues/664
+# https://esphome.io/components/sensor/integration.html
+# https://community.home-assistant.io/t/using-esphome-to-build-a-water-flow-rate-meter/119380/64
+
+# Enable Home Assistant API
+api:
+  services:
+    - service: reset_main_counter
+      then:
+        - script.execute: reset_main_counter
+    - service: reset_secondary_counter
+      then:
+        - script.execute: reset_secondary_counter
+
+globals:
+ - id: main_counter_pulses
+   type: int
+   restore_value: yes
+   initial_value: '0'
+ 
+ - id: secondary_counter_pulses
+   type: int
+   restore_value: yes
+   initial_value: '0'
+ 
+ - id: daily_counter_pulses
+   type: int
+   restore_value: yes
+   initial_value: '0'
+ 
+ - id: weekly_counter_pulses
+   type: int
+   restore_value: yes
+   initial_value: '0'
+ 
+ - id: monthly_counter_pulses
+   type: int
+   restore_value: yes
+   initial_value: '0'
+ 
+ - id: yearly_counter_pulses
+   type: int
+   restore_value: yes
+   initial_value: '0'
+
+ - id: event_quantity
+   type: int
+   restore_value: no
+   initial_value: '0'
+ 
+ - id: last_event_quantity
+   type: int
+   restore_value: no
+   initial_value: '0'
+ 
+ - id: event_counter
+   type: int
+   restore_value: no
+   initial_value: '0'
+ 
+ - id: current_event_quantity
+   type: int
+   restore_value: no
+   initial_value: '0'
+
+ - id: higher_resistance
+   type: float
+   restore_value: yes
+   initial_value: '0'
+   
+script:
+  - id: reset_main_counter
+    then:
+      - lambda: |-
+          id(main_counter_pulses) = 0;
+          id(water_main_consumption).publish_state(id(main_counter_pulses));
+
+  - id: reset_secondary_counter
+    then:
+      - lambda: |-
+          id(secondary_counter_pulses) = 0;
+          id(water_secondary_consumption).publish_state(id(secondary_counter_pulses));
+
+  - id: publish_states
+    then:
+      - lambda: |-
+          id(water_main_consumption).publish_state(id(main_counter_pulses));
+          id(water_secondary_consumption).publish_state(id(secondary_counter_pulses));
+          id(water_daily_consumption).publish_state(id(daily_counter_pulses));
+          id(water_weekly_consumption).publish_state(id(weekly_counter_pulses));
+          id(water_monthly_consumption).publish_state(id(monthly_counter_pulses));
+          id(water_yearly_consumption).publish_state(id(yearly_counter_pulses));
+          id(current_water_consumption).publish_state(id(event_quantity));
+                
+web_server:
+
+sensor:
+  # TCRT5000 pulse counter
+  # IO18 / GPIO18
+  - platform: pulse_counter
+    id: water_pulse_counter
+    name: ${sensorname}_water_consumption
+    pin: D1
+    update_interval: 2sec
+    internal_filter: 10us
+    unit_of_measurement: "L/min"
+    accuracy_decimals: 0
+    icon: "mdi:water"
+    filters:
+      # Divide by 60
+      - multiply: 0.0167
+      - lambda: return abs(x);
+
+# Value calculated are not consistent
+#- platform: integration
+#  id: water_integration_sensor
+#  name: "${sensorname} integrated water consumption"
+#  sensor: water_pulse_counter
+#  time_unit: min
+#  unit_of_measurement: "L"
+#  accuracy_decimals: 0
+#  icon: "mdi:water"
+
+  - platform: template
+    id: water_main_consumption
+    name: ${sensorname}_main_water_consumption
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    icon: "mdi:water"
+  
+  - platform: template
+    id: water_secondary_consumption
+    name: ${sensorname}_secondary_water_consumption
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    icon: "mdi:water"
+  
+  - platform: template
+    id: water_daily_consumption
+    name: ${sensorname}_daily_water_consumption
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    icon: "mdi:water"    
+    state_class: total_increasing    
+  
+  - platform: template
+    id: water_weekly_consumption
+    name: ${sensorname}_weekly_water_consumption
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    icon: "mdi:water"
+  
+  - platform: template
+    id: water_monthly_consumption
+    name: ${sensorname}_monthly_water_consumption
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    icon: "mdi:water"
+  
+  - platform: template
+    id: water_yearly_consumption
+    name: ${sensorname}_yearly_water_consumption
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    icon: "mdi:water"
+  
+  - platform: template
+    id: current_water_consumption
+    name: ${sensorname}_current_water_consumption
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    icon: "mdi:water"
+  
+  - platform: template
+    id: last_water_consumption
+    name: ${sensorname}_last_water_consumption
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    icon: "mdi:water"
+
+binary_sensor:
+  # TCRT5000 pulse counter
+  # IO18 / GPIO18
+  - platform: gpio
+    id: water_pulse
+    pin: D1
+    internal: true
+    filters:
+       - delayed_on_off: 50ms
+       - lambda: |-
+          id(main_counter_pulses) += x;
+          id(secondary_counter_pulses) += x;
+          id(daily_counter_pulses) += x;
+          id(weekly_counter_pulses) += x;
+          id(monthly_counter_pulses) += x;
+          id(yearly_counter_pulses) += x;
+          id(event_quantity) += x;
+          return x;
+    on_state:
+       - script.execute: publish_states
+
+switch:
+  - platform: template
+    name: ${sensorname}_reset_main_counter_button
+    icon: "mdi:restart"
+    turn_on_action:
+      - script.execute: reset_main_counter
+
+  - platform: template
+    name: ${sensorname}_reset_secondary_counter_button
+    icon: "mdi:restart"
+    turn_on_action:
+      - script.execute: reset_secondary_counter
+
+  - platform: restart
+    name: ${sensorname}_restart
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+    
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        then:
+          - globals.set:
+              id: daily_counter_pulses
+              value: '0'
+          - lambda: id(water_daily_consumption).publish_state(id(daily_counter_pulses));
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        days_of_week: MON
+        then:
+          - globals.set:
+              id: weekly_counter_pulses
+              value: '0'
+          - lambda: id(water_weekly_consumption).publish_state(id(weekly_counter_pulses));
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        days_of_month: 1
+        then:
+          - globals.set:
+              id: monthly_counter_pulses
+              value: '0'
+          - lambda: id(water_monthly_consumption).publish_state(id(monthly_counter_pulses));
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        days_of_month: 1
+        months: JAN
+        then:
+          - globals.set:
+              id: yearly_counter_pulses
+              value: '0'
+          - lambda: id(water_yearly_consumption).publish_state(id(yearly_counter_pulses));
+
+interval:
+  # Save the last consumption
+  #
+  # An event is published when a water flow (>= 1L / 15 seconds) is
+  # detected and followed by a stop of consumption for a defined time.
+  - interval: 15sec
+    then:
+      - lambda: |-
+          if (id(event_quantity) != id(last_event_quantity)) {
+            // Water continues to flow
+
+            // Reset event counter
+            id(event_counter) = 0;
+          } else {
+            // Water no longer flows
+
+            if (id(event_quantity)) {
+              // 4 * 15 * 5 = 5min
+              if (id(event_counter) < 4 * 5) {
+                // Timeout is not reaches
+                id(event_counter)++;
+              } else {
+                  // Timeout is reaches
+                  id(last_water_consumption).publish_state(id(event_quantity));
+
+                  // Send event to Home Assistant
+                  api::HomeAssistantServiceCallAction<> *api;
+                  api = new api::HomeAssistantServiceCallAction<>(api_apiserver, true);
+                  // Event id length limit is 32 characters
+                  api->set_service("esphome.last_consumption_changes");
+                  api->play();
+
+                  id(event_quantity) = 0;
+              }
+            }
+          }
+
+          id(last_event_quantity) = id(event_quantity);
+
+  # Track the current consumption
+  - interval: 2sec
+    then:
+      - lambda: |-
+          if (id(event_quantity) != id(current_event_quantity)) {
+            id(current_water_consumption).publish_state(id(event_quantity));
+          }
+          id(current_event_quantity) = id(event_quantity);
+
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml

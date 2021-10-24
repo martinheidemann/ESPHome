@@ -10,9 +10,6 @@ esphome:
   comment: $comment
   #esp8266_restore_from_flash: true
 
-wifi:
-  use_address: 10.0.20.10
-  
 binary_sensor:
 - platform: gpio
   pin:

@@ -1,3 +1,8 @@
+# Time for uptime
 time:
   - platform: homeassistant
-    id: homeassistant_time
+    id: time_homeassistant
+# text_sensor:
+#   - platform: uptime
+#     name: Uptime
+#     id:

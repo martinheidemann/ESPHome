@@ -1,6 +1,7 @@
 wifi:
   ssid: !secret esphome_ssid
   password: !secret esphome_password
+  domain: .local.tranbjerg3.dk
 
   ap:
     ssid: ${sensorname}_hotspot
@@ -9,14 +10,22 @@ wifi:
 captive_portal:
 
 sensor:
-  - platform: uptime
-    name: ${sensorname}_uptime
-
   - platform: wifi_signal
-    name: ${sensorname}_wifi_signal
+    name: Wifi signal
     update_interval: 60s
     force_update: True
     filters:
       - lambda: |-
           if (x < -90.0 || x > -30.0) return {};
           else return x;
+
+text_sensor:
+  # WiFi info
+  - platform: wifi_info
+    ip_address:
+      name: "IP address"
+      icon: "mdi:network-outline"
+    ssid:
+      name: "Connected SSID"
+    bssid:
+      name: "Connected BSSID"

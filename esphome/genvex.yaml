@@ -1,0 +1,174 @@
+########################################################################################
+#                      CONFIGURATION PART OF YOUR CHOICE :)                            #
+########################################################################################
+
+substitutions:
+  devicename: genvex
+  sensorname: genvex
+
+  # PIN DEFINITIONS (Should in most cases not be changed) 
+  rx_pin: '20'
+  tx_pin: '21'
+
+########################################################################################
+#                        CODE BELOW SHOULD NOT BE CHANGED                              #
+########################################################################################  
+
+esphome:
+  name: ${devicename}
+  friendly_name: Genvex
+  comment: ECO 400 XL
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+  
+# Overwrite logging
+logger:
+  baud_rate: 0
+
+uart:
+  id: uart_genvex
+  rx_pin: ${rx_pin}
+  tx_pin: ${tx_pin}
+  baud_rate: 19200
+  parity: EVEN
+  stop_bits: 1
+  
+modbus:
+  id: genvex_modbus
+  uart_id: uart_genvex
+  flow_control_pin: 10
+ 
+modbus_controller:
+  id: genvex_modbus_controller
+  address: 20
+  modbus_id: genvex_modbus
+  update_interval: 60s
+  command_throttle: 10ms
+
+# number:
+#   # Level 1 Supply air
+#   - platform: modbus_controller
+#     modbus_controller_id: genvex_modbus_controller
+#     name: Level 1 Supply air
+#     id: genvex_level_1_supply_air
+#     min_value: 0
+#     max_value: 100
+#     step: 1
+#     address: 10
+#     lambda: "return x;"
+#     write_lambda: |-
+#       ESP_LOGD("main","Processing new Level 1 Supply air");
+#       return x;
+
+#   # Level 2 Supply air
+#   - platform: modbus_controller
+#     modbus_controller_id: genvex_modbus_controller
+#     name: Level 2 Supply air
+#     id: genvex_level_2_supply_air
+#     min_value: 0
+#     max_value: 100
+#     step: 1
+#     address: 11
+#     lambda: "return x;"
+#     write_lambda: |-
+#       ESP_LOGD("main","Processing new Level 2 Supply air");
+#       return x;
+
+#   # Level 3 Supply air
+#   - platform: modbus_controller
+#     modbus_controller_id: genvex_modbus_controller
+#     name: Level 3 Supply air
+#     id: genvex_level_3_supply_air
+#     min_value: 0
+#     max_value: 100
+#     step: 1
+#     address: 12
+#     lambda: "return x;"
+#     write_lambda: |-
+#       ESP_LOGD("main","Processing new Level 3 Supply air");
+#       return x;
+
+#   # Level 4 Supply air
+#   - platform: modbus_controller
+#     modbus_controller_id: genvex_modbus_controller
+#     name: Level 4 Supply air
+#     id: genvex_level_4_supply_air
+#     min_value: 0
+#     max_value: 100
+#     step: 1
+#     address: 8
+#     lambda: "return x;"
+#     write_lambda: |-
+#       ESP_LOGD("main","Processing new Level 4 Supply air");
+#       return x;
+
+#   # Level 1 Extract air
+#   - platform: modbus_controller
+#     modbus_controller_id: genvex_modbus_controller
+#     name: Level 1 Extract air
+#     id: genvex_level_1_extract_air
+#     min_value: 0
+#     max_value: 100
+#     step: 1
+#     address: 13
+#     lambda: "return x;"
+#     write_lambda: |-
+#       ESP_LOGD("main","Processing new Level 1 Extract air");
+#       return x;
+
+#   # Level 2 Extract air
+#   - platform: modbus_controller
+#     modbus_controller_id: genvex_modbus_controller
+#     name: Level 2 Extract air
+#     id: genvex_level_2_extract_air
+#     min_value: 0
+#     max_value: 100
+#     step: 1
+#     address: 14
+#     lambda: "return x;"
+#     write_lambda: |-
+#       ESP_LOGD("main","Processing new Level 2 Extract air");
+#       return x;
+
+#   # Level 3 Extract air
+#   - platform: modbus_controller
+#     modbus_controller_id: genvex_modbus_controller
+#     name: Level 3 Extract air
+#     id: genvex_level_3_extract_air
+#     min_value: 0
+#     max_value: 100
+#     step: 1
+#     address: 15
+#     lambda: "return x;"
+#     write_lambda: |-
+#       ESP_LOGD("main","Processing new Level 3 Extract air");
+#       return x;
+
+#   # Level 4 Extract air
+#   - platform: modbus_controller
+#     modbus_controller_id: genvex_modbus_controller
+#     name: Level 4 Extract air
+#     id: genvex_level_4_extract_air
+#     min_value: 0
+#     max_value: 100
+#     step: 1
+#     address: 9
+#     lambda: "return x;"
+#     write_lambda: |-
+#       ESP_LOGD("main","Processing new Level 4 Extract air");
+#       return x;
+
+## Genvex V2 file    
+packages:
+  remote_package:
+    url: https://github.com/lskov/esphome_components
+    ref: main
+    files: [components/genvexv2/optima270.yaml]
+    refresh: 0s
+
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml

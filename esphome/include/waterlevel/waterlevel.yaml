@@ -4,18 +4,19 @@ substitutions:
 
 esphome:
   name: $devicename
-  platform: ESP8266
-  board: nodemcuv2
+  friendly_name: Waterlevel
   comment: $comment
 
+esp8266:
+  board: nodemcuv2
 sensor:
   - platform: ultrasonic
     trigger_pin: D5
     echo_pin: D6
-    name: ${sensorname}
+    name: Distance
     unit_of_measurement: "cm"
     accuracy_decimals: 0
-    pulse_time: 20us
+    pulse_time: 30us
     update_interval: 20s
 
     filters:

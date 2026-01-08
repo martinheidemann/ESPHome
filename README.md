@@ -1,2 +1,3 @@
-# esphome
-My esphome devices
+# ESPHome
+My ESPHome devices
+

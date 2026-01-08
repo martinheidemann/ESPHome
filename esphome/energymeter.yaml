@@ -5,7 +5,7 @@
 
 substitutions:
   devicename: energymeter
-  friendly_name: "Energy meter"
+  friendly_name: Energy meter
   comment: "Varmeforbrug"  
 
 esphome:

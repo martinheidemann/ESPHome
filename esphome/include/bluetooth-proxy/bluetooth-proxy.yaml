@@ -1,0 +1,21 @@
+substitutions:
+  devicename: ${name}-${id}
+  sensorname: ${name}_${id}
+
+esphome:
+  name: $devicename
+  friendly_name: Bluetooth Proxy ${id}
+  comment: $comment
+
+esp32:
+  board: esp32dev
+
+bluetooth_proxy:
+  active: true
+
+esp32_ble_tracker:
+  scan_parameters:
+    # We currently use the defaults to ensure Bluetooth
+    # can co-exist with WiFi In the future we may be able to
+    # enable the built-in coexistence logic in ESP-IDF
+    active: true

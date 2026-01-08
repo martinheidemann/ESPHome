@@ -1,11 +1,11 @@
-dallas:
-  - pin: $temperature_pin
-    update_interval: 20s
+one_wire:
+  - platform: gpio
+    pin: $temperature_pin
 
 sensor:
-  - platform: dallas
+  - platform: dallas_temp
     address: $temperature_addr_1
-    name: ${sensorname}_temperature_1
+    name: Temperatur
 
     filters:
       - sliding_window_moving_average:

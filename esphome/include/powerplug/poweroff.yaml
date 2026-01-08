@@ -1,8 +1,8 @@
 sensor:
   - platform: template
     internal: true
-    name: "${sensorname}_poweroff"
-    #id: "${sensorname}_watt"
+    name: Power off
+    id: "${sensorname}_poweroff"
     unit_of_measurement: W
     accuracy_decimals: 0
 

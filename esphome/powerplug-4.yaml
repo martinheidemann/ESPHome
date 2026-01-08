@@ -1,7 +1,7 @@
 substitutions:
   name: powerplug
   id: "4"
-  comment: "HiHome Plug (wpp-16s) - Affugter"
+  comment: "HiHome Plug (wpp-16s) - Julelys tag"
   
   v1_in:  "0.0"
   v2_in:  "657.8"
@@ -47,8 +47,8 @@ packages:
   button: !include include/powerplug/button.yaml
 
   #set relay on at boot
-  #boot: !include include/powerplug/boot_relay_on.yaml
+  #boot: !include include/powerplug/boot_relay_and_led_on.yaml
 
   #set switch on at boot
-  boot: !include include/powerplug/boot_switch_on.yaml
+  #boot: !include include/powerplug/boot_switch_on.yaml
   

@@ -1,0 +1,111 @@
+########################################################################################
+#                                                                                      #
+#      WAVIN SENTIO FLOOR HEATING CONTROLLER SOFTWARE FOR HOME ASSISTANT               #
+#                                                                                      #   
+#        Code developed by : Mogens Groth Nicolaisen                                   #
+#                                                                                      #
+# https://github.com/nic6911/esphome_components/tree/main/components/sentio            #    
+#                                                                                      #
+# Hardware by : Mogens Groth Nicolaisen https://github.com/nic6911/ESP32_Modus_Module  #                                                                                       
+#                                                                                      #
+########################################################################################
+
+
+########################################################################################
+#                      CONFIGURATION PART OF YOUR CHOICE :)                            #
+########################################################################################
+
+substitutions:
+  devicename: sentio
+  sensorname: sentio
+ 
+  # UPDATE TIME (GATEWAY)
+    
+  # CHANNEL ID´S
+  channel_1:  Toilet
+  channel_2:  Køkken / spisestue / entre
+  channel_3:  <Unused> #Køkken
+  channel_4:  Bryggers
+  channel_5:  Badeværelse
+  channel_6:  Alfreds værelse
+  channel_7:  <Unused> #Spisestue
+  channel_8:  Malthes værelse
+  channel_9:  Soveværelse
+  channel_10: Stue
+  channel_11: Dictes værelse
+  channel_12: <Unused>
+  channel_13: <Unused>
+  channel_14: <Unused>
+  channel_15: <Unused>
+  channel_16: <Unused>
+  
+  # PIN DEFINITIONS (Should in most cases not be changed) 
+  rx_pin: '20'
+  tx_pin: '21'
+
+########################################################################################
+#                        CODE BELOW SHOULD NOT BE CHANGED                              #
+########################################################################################  
+
+esphome:
+  name: ${devicename}
+  friendly_name: Sentio
+  comment: Wavin Sentio gulvvarmestyring
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+# Overwrite logging
+logger:
+  baud_rate: 0
+
+uart:
+  id: uart_modbus
+  rx_pin: ${rx_pin}
+  tx_pin: ${tx_pin}
+  baud_rate: 19200
+  parity: NONE
+  stop_bits: 1
+  
+modbus:
+  id: modbus_id
+  uart_id: uart_modbus
+  flow_control_pin: 10
+  
+modbus_controller:
+  id: sentio_modbus_controller
+  address: 1
+  modbus_id: modbus_id
+  update_interval: 10s
+  #command_throttle: 10ms
+
+# Uncomment the active channels on your Wavin Sentio
+packages:
+  remote_package:
+    url: https://github.com/nic6911/esphome_components
+    ref: main
+    files: 
+      - components/sentio/configs/basic.yaml # REQUIRED FOR WAVIN SENTIO
+      - components/sentio/configs/channel_01.yaml
+      - components/sentio/configs/channel_02.yaml #2+3+7 are combined - channels 3+7 are commented out
+      #- components/sentio/configs/channel_03.yaml
+      - components/sentio/configs/channel_04.yaml
+      - components/sentio/configs/channel_05.yaml
+      - components/sentio/configs/channel_06.yaml
+      #- components/sentio/configs/channel_07.yaml
+      - components/sentio/configs/channel_08.yaml
+      - components/sentio/configs/channel_09.yaml
+      - components/sentio/configs/channel_10.yaml
+      - components/sentio/configs/channel_11.yaml
+      #- components/sentio/configs/channel_12.yaml
+      #- components/sentio/configs/channel_13.yaml
+      #- components/sentio/configs/channel_14.yaml
+      #- components/sentio/configs/channel_15.yaml
+      #- components/sentio/configs/channel_16.yaml
+
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+

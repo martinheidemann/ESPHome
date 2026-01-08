@@ -1,0 +1,13 @@
+substitutions:
+  name: watermeter
+  comment: "Vandforbrug"  
+
+  devicename: ${name}
+  sensorname: ${name}
+                
+packages:
+  watermeter: !include include/watermeter/watermeter.yaml  
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml
+  restart: !include include/restart.yaml

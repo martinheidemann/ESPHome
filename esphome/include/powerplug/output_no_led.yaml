@@ -1,0 +1,4 @@
+output:
+  - platform: gpio
+    id: relay
+    pin: GPIO14

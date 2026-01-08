@@ -1,7 +1,7 @@
 substitutions:
   name: powerplug
   id: "8"
-  comment: "HiHome Plug (wpp-16s) - Køleskab - må ikke slukkes"
+  comment: "HiHome Plug (wpp-16s) - Køleskab kælder - må ikke slukkes"
   
   v1_in:  "0.0"
   v2_in:  "666.7"

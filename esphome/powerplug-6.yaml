@@ -34,6 +34,9 @@ substitutions:
   a3_out: "4.9896"
   a4_out: "7.6306"
 
+  # min_watt: "18"
+  # min_time: "60s"
+  
 packages:
   wifi: !include include/wifi.yaml
   basic: !include include/basic.yaml
@@ -41,14 +44,16 @@ packages:
   powerplug: !include include/powerplug/powerplug.yaml
   
   #include led and relay outputs
-  output: !include include/powerplug/output.yaml
+  output: !include include/powerplug/output_no_led.yaml
 
-  #enable to the button on the powerplug
+  #enable to the use button on the powerplug
   #button: !include include/powerplug/button.yaml
+  
+  #set poweroff on usage below "min_watt" and "min_time" 
+  #button: !include include/powerplug/button_poweroff.yaml
 
   #set relay on at boot
   boot: !include include/powerplug/boot_relay_on.yaml
 
   #set switch on at boot
   #boot: !include include/powerplug/boot_switch_on.yaml
-  

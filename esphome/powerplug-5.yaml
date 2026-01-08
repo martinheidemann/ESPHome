@@ -1,7 +1,7 @@
 substitutions:
   name: powerplug
   id: "5"
-  comment: "HiHome Plug (wpp-16s) - Ledig"
+  comment: "HiHome Plug (wpp-16s) - Drænpumpe"
   
   v1_in:  "0.0"
   v2_in:  "662.0"
@@ -33,6 +33,9 @@ substitutions:
   a2_out: "2.9001"
   a3_out: "4.9931"
   a4_out: "7.6341"
+
+wifi:
+  use_address: 10.0.20.54
 
 packages:
   wifi: !include include/wifi.yaml

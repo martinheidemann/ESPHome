@@ -1,5 +1,6 @@
 # Enable logging
 logger:
+  #level: DEBUG
 
 # Enable Home Assistant API
 api:
@@ -7,5 +8,10 @@ api:
     key: !secret esphome_encryption
 
 ota:
+  - platform: esphome
 
-web_server:
+text_sensor:
+  # ESPHome information
+  - platform: version
+    name: "ESPHome Version"
+    hide_timestamp: true

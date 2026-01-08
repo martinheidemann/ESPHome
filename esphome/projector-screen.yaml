@@ -1,0 +1,54 @@
+substitutions:
+  devicename: projector-screen
+  sensorname: projector_screen
+  
+esphome:
+  name: $devicename
+  friendly_name: Projector screen  
+  comment: "SONOFF Dual R2 - Lærred"
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+  
+binary_sensor:
+- platform: gpio
+  pin:
+    number: GPIO10
+    #inverted: true
+  id: button
+  on_press:
+    then:
+      - switch.turn_on: screen_up
+  on_release:
+    then:
+      - switch.turn_off: screen_up
+
+switch:
+- platform: gpio
+  pin: GPIO12
+  interlock: &interlock [screen_up, screen_down]
+  id: screen_up
+- platform: gpio
+  pin: GPIO5
+  interlock: *interlock
+  id: screen_down
+
+cover:
+- platform: time_based
+  name: Screen
+  id:  ${sensorname}_screen
+  open_action: #OP
+    - switch.turn_on: screen_up
+  open_duration: 40s
+  close_action: #NED
+    - switch.turn_on: screen_down
+  close_duration: 38s
+  stop_action:
+    - switch.turn_off: screen_up
+    - switch.turn_off: screen_down
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml

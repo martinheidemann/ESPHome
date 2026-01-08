@@ -1,0 +1,43 @@
+binary_sensor:
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO00
+      inverted: True
+    internal: True
+    on_press:
+      - switch.turn_on: fakebutton
+
+switch:
+  - platform: template
+    name: Status
+    optimistic: true
+    id: fakebutton
+    turn_on_action:
+      - output.turn_on: relay
+    turn_off_action:
+      - output.turn_off: relay
+
+sensor:
+  - platform: template
+    internal: true
+    name: Power off
+    id: "fakebutton_poweroff"
+    unit_of_measurement: W
+    accuracy_decimals: 0
+
+    lambda: |-
+      return (id(${sensorname}_watt).state);
+
+    on_value:
+      - if:
+          condition:
+            for:
+              time: ${min_time}
+              condition:
+                sensor.in_range:
+                  id: fakebutton_poweroff
+                  below: ${min_watt}
+
+          then:
+            - switch.turn_off: fakebutton

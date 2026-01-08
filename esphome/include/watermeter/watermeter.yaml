@@ -1,0 +1,83 @@
+#  # ⬇ Enable Home Assistant API ⬇ #
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: nodemcuv2
+  comment: $comment
+  esp8266_restore_from_flash: true
+
+api:
+  services:
+    - service: meterstand_water
+      variables:
+        meter_value: float
+      then:
+        - globals.set:
+            id: initial_water_usage
+            value: !lambda "return ( meter_value ) ;"
+
+globals:
+  #  - id: totalWaterUsage
+  - id: initial_water_usage
+    type: float
+    restore_value: yes
+    initial_value: "015"
+  - id: total_water_pulses
+    type: int
+    restore_value: yes
+
+binary_sensor:
+  #------------------------# Watermeter #------------------------#
+  - platform: gpio
+    id: internal_pulse_counter
+    name: Pulse Sensor water
+    filters:
+      - delayed_on: 1s
+      - delayed_off: 1s
+    pin:
+      number: D1
+      mode:
+        input: true
+    #on_press:
+    #  - then:
+    #      lambda: id(total_water_pulses) += 1;
+
+sensor:
+  #------------------------# Watermeter #------------------------#
+  # ⬇ watermeter pulse ⬇ #
+  - platform: pulse_counter
+    pin: D1
+    id: watermeter_pulse
+    update_interval: 6s
+    internal_filter: 1s
+    name: "watermeter pulse"
+    state_class: measurement
+    unit_of_measurement: "l/min"
+    accuracy_decimals: 1
+    icon: "mdi:water-pump"
+
+    # ⬇ Total watermeter ⬇ #
+    total:
+      id: sensor_pulse_meter_total
+      name: "watermeter Total"
+      unit_of_measurement: "L"
+      state_class: total_increasing
+      device_class: water
+      accuracy_decimals: 0
+
+  # ⬇ Watermeter initial stand ⬇ #
+  - platform: template
+    id: watermeter_total
+    name: "watermeter stand"
+    state_class: "total_increasing"
+    icon: mdi:water
+    unit_of_measurement: L
+    accuracy_decimals: 0
+    lambda: return id(initial_water_usage) + (id(total_water_pulses));
+
+  # ⬇ Waterpulses ⬇ #
+  - platform: template
+    id: watermeter_pulses
+    name: "watermeter pulses total"
+    state_class: "total_increasing"
+    lambda: return id(total_water_pulses);

@@ -1,7 +1,7 @@
 substitutions:
   name: powerplug
   id: "11"
-  comment: "HiHome Plug (wpp-16s) - Printer"
+  comment: "HiHome Plug (wpp-16s) - Emhætte"
   
   v1_in:  "0.0"
   v2_in:  "657.4"
@@ -34,6 +34,10 @@ substitutions:
   a3_out: "5.007"
   a4_out: "7.648"
 
+#wifi:
+ # use_address: 10.0.20.60
+#  output_power: 10
+
 packages:
   wifi: !include include/wifi.yaml
   basic: !include include/basic.yaml
@@ -44,10 +48,10 @@ packages:
   output: !include include/powerplug/output.yaml
 
   #enable to the button on the powerplug
-  button: !include include/powerplug/button.yaml
+  #button: !include include/powerplug/button.yaml
 
   #set relay on at boot
-  #boot: !include include/powerplug/boot_relay_on.yaml
+  boot: !include include/powerplug/boot_relay_on.yaml
 
   #set switch on at boot
   #boot: !include include/powerplug/boot_switch_on.yaml

@@ -4,13 +4,16 @@ substitutions:
 
 esphome:
   name: $devicename
-  platform: ESP8266
-  board: esp01_1m
+  friendly_name: Powerplug ${id}
   comment: $comment
+
+esp8266:
+  board: esp01_1m
 
 sensor:
   - platform: total_daily_energy
-    name: ${sensorname}_total_daily_energy
+    name: Total daily energy
+    id: ${sensorname}_total_daily_energy
     power_id: ${sensorname}_watt
     accuracy_decimals: 3
     unit_of_measurement: kWh
@@ -31,7 +34,6 @@ sensor:
     # sensor som bliver eksponeret  til ha
 
     voltage:
-      name: "${sensorname}_volt_org"
       id: "${sensorname}_volt_org"
       unit_of_measurement: V
       accuracy_decimals: 5
@@ -42,7 +44,6 @@ sensor:
           - component.update: ${sensorname}_volt
 
     power:
-      name: "${sensorname}_watt_org"
       id: "${sensorname}_watt_org"
       unit_of_measurement: W
       accuracy_decimals: 5
@@ -53,7 +54,6 @@ sensor:
           - component.update: ${sensorname}_watt
 
     current:
-      name: "${sensorname}_amp_org"
       id: "${sensorname}_amp_org"
       unit_of_measurement: A
       accuracy_decimals: 5
@@ -64,7 +64,7 @@ sensor:
           - component.update: ${sensorname}_amp
 
   - platform: template
-    name: "${sensorname}_volt"
+    name: Voltage
     id: "${sensorname}_volt"
     unit_of_measurement: V
     accuracy_decimals: 1
@@ -82,7 +82,7 @@ sensor:
           - ${v6_in} -> ${v6_out}
 
   - platform: template
-    name: "${sensorname}_watt"
+    name: Power
     id: "${sensorname}_watt"
     unit_of_measurement: W
     state_class: measurement
@@ -104,7 +104,7 @@ sensor:
       - lambda: if (x < (2 + 0.85)) return 0; else return (x - 0.85);
 
   - platform: template
-    name: "${sensorname}_amp"
+    name: Current
     id: "${sensorname}_amp"
     unit_of_measurement: A
     accuracy_decimals: 3

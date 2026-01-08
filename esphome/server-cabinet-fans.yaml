@@ -1,0 +1,45 @@
+substitutions:
+  name: serverfan
+  comment: "Server cabinet fan controller"
+
+  devicename: ${name}
+  sensorname: ${name}
+
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: nodemcuv2
+  comment: $comment
+
+#output:
+#  - platform: ledc
+#    pin: GPIO12
+#    frequency: 10000 Hz
+#    id: cabfan
+
+output:
+  - platform: esp8266_pwm
+    pin: D1
+    frequency: 1000 Hz
+    id: pwm_output
+
+fan:
+  - platform: speed
+    output: pwm_output
+    name: "Server Cabinet Fan"
+    
+sensor:
+  - platform: pulse_counter
+    pin: 
+      number: D2
+      mode: INPUT_PULLUP
+    unit_of_measurement: 'RPM'
+    #id: ${name}_speed
+    name: ${name}_speed
+    filters:
+      - multiply: 0.5
+
+packages:
+  wifi: !include include/wifi.yaml
+  basic: !include include/basic.yaml
+  time: !include include/time.yaml

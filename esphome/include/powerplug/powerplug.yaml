@@ -21,6 +21,7 @@ sensor:
     device_class: energy
     filters:
       - multiply: 0.001
+      - delta: 0.001 # Only send on changes of 0.001 kWh
 
   - platform: hlw8012
     sel_pin:
@@ -67,6 +68,8 @@ sensor:
     name: Voltage
     id: "${sensorname}_volt"
     unit_of_measurement: V
+    device_class: voltage
+    state_class: measurement
     accuracy_decimals: 1
 
     lambda: |-
@@ -80,6 +83,7 @@ sensor:
           - ${v4_in} -> ${v4_out}
           - ${v5_in} -> ${v5_out}
           - ${v6_in} -> ${v6_out}
+      - delta: 0.5 # Only send on changes of 0.5V
 
   - platform: template
     name: Power
@@ -98,15 +102,18 @@ sensor:
           - ${w2_in} -> ${w2_out}
           - ${w3_in} -> ${w3_out}
           - ${w4_in} -> ${w4_out}
+      - delta: 2.0 # Only send on changes of 2W
 
       # Make everything below 2W appear as just 0W.
-      # Furthermore it corrects 1.14W for the power usage of the plug.
-      - lambda: if (x < (2 + 0.85)) return 0; else return (x - 0.85);
+      # Furthermore it corrects ~2.0W for the power usage of the plug.
+      - lambda: if (x < 2) return 0; else return (x - 2);
 
   - platform: template
     name: Current
     id: "${sensorname}_amp"
     unit_of_measurement: A
+    device_class: current
+    state_class: measurement
     accuracy_decimals: 3
 
     lambda: |-
@@ -118,7 +125,8 @@ sensor:
           - ${a2_in} -> ${a2_out}
           - ${a3_in} -> ${a3_out}
           - ${a4_in} -> ${a4_out}
+      - delta: 0.01 # Only send on changes of 0.01A
 
       # Make everything below 0.01A appear as just 0A.
-      # Furthermore it corrects 0.013A for the power usage of the plug.
-      - lambda: if (x < (0.01 - 0.010)) return 0; else return (x - 0.010);
+      # Furthermore it corrects 0.01A for the power usage of the plug.
+      - lambda: if (x < 0.010) return 0; else return (x - 0.010);

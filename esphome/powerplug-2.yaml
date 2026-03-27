@@ -1,7 +1,7 @@
 substitutions:
   name: powerplug
   id: "2"
-  comment: "HiHome Plug (wpp-16s) - LEDIG"
+  comment: "HiHome Plug (wpp-16s) - Julelys tag"
   
   v1_in:  "0.0"
   v2_in:  "657.4"

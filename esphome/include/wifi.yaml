@@ -2,6 +2,7 @@ wifi:
   ssid: !secret esphome_ssid
   password: !secret esphome_password
   domain: .local.tranbjerg3.dk
+  min_auth_mode: WPA2
 
   ap:
     ssid: ${sensorname}_hotspot

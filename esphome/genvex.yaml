@@ -167,7 +167,7 @@ packages:
     url: https://github.com/lskov/esphome_components
     ref: main
     files: [components/genvexv2/optima270.yaml]
-    refresh: 0s
+    refresh: 1d
 
   wifi: !include include/wifi.yaml
   basic: !include include/basic.yaml

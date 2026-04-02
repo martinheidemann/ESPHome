@@ -50,5 +50,5 @@ packages:
   #boot: !include include/powerplug/boot_relay_on.yaml
 
   #set switch on at boot
-  #boot: !include include/powerplug/boot_switch_on.yaml
+  boot: !include include/powerplug/boot_switch_on.yaml
   

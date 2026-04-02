@@ -11,17 +11,7 @@ esp8266:
   board: esp01_1m
 
 sensor:
-  - platform: total_daily_energy
-    name: Total daily energy
-    id: ${sensorname}_total_daily_energy
-    power_id: ${sensorname}_watt
-    accuracy_decimals: 3
-    unit_of_measurement: kWh
-    state_class: total_increasing
-    device_class: energy
-    filters:
-      - multiply: 0.001
-      - delta: 0.001 # Only send on changes of 0.001 kWh
+  # total_daily_energy fjernet - bruger nu hlw8012 built-in energy sensor i stedet
 
   - platform: hlw8012
     sel_pin:
@@ -44,11 +34,29 @@ sensor:
         then:
           - component.update: ${sensorname}_volt
 
+    energy:
+      name: Total daily energy
+      id: ${sensorname}_total_daily_energy
+      unit_of_measurement: kWh
+      accuracy_decimals: 3
+      state_class: total_increasing
+      device_class: energy
+      filters:
+        - multiply: 0.001 # Wh -> kWh
+        - delta: 0.001    # Only send on changes of 0.001 kWh
+
     power:
       id: "${sensorname}_watt_org"
       unit_of_measurement: W
       accuracy_decimals: 5
       internal: true
+      filters:
+        # Glat over 3 målinger for at undgå spikes fra HLW8012 ved belastningsskift
+        - sliding_window_moving_average:
+            window_size: 3
+            send_every: 1
+        # Kassér urealistisk høje værdier (mere end 3700W = 16A ved 230V)
+        - lambda: if (x > 3700) return {}; else return x;
 
       on_value:
         then:

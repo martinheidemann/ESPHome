@@ -11,7 +11,7 @@ esp8266:
   board: esp01_1m
 
 sensor:
-  # total_daily_energy fjernet - bruger nu hlw8012 built-in energy sensor i stedet
+  # total_daily_energy removed - using hlw8012 built-in energy sensor instead
 
   - platform: hlw8012
     sel_pin:
@@ -22,7 +22,7 @@ sensor:
     initial_mode: VOLTAGE
     #change_mode_every: 4294967295
     update_interval: 10s
-    # sensor som bliver eksponeret  til ha
+    # sensors exposed to HA
 
     voltage:
       id: "${sensorname}_volt_org"
@@ -51,11 +51,11 @@ sensor:
       accuracy_decimals: 5
       internal: true
       filters:
-        # Glat over 3 målinger for at undgå spikes fra HLW8012 ved belastningsskift
+        # Smooth over 3 readings to avoid spikes from HLW8012 during load transitions
         - sliding_window_moving_average:
             window_size: 3
             send_every: 1
-        # Kassér urealistisk høje værdier (mere end 3700W = 16A ved 230V)
+        # Discard unrealistically high values (more than 3700W = 16A at 230V)
         - lambda: if (x > 3700) return {}; else return x;
 
       on_value:
@@ -135,6 +135,5 @@ sensor:
           - ${a4_in} -> ${a4_out}
       - delta: 0.01 # Only send on changes of 0.01A
 
-      # Make everything below 0.01A appear as just 0A.
-      # Furthermore it corrects 0.01A for the power usage of the plug.
-      - lambda: if (x < 0.010) return 0; else return (x - 0.010);
+      # Suppress noise below 0.05A (HLW8012 fluctuates when idle)
+      - lambda: if (x < 0.05) return 0; else return x;

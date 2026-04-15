@@ -164,7 +164,7 @@ modbus_controller:
 ## Genvex V2 file    
 packages:
   remote_package:
-    url: https://github.com/lskov/esphome_components
+    url: https://github.com/martinheidemann/esphome_components
     ref: main
     files: [components/genvexv2/optima270.yaml]
     refresh: 1d
